@@ -1,0 +1,79 @@
+# pod to pod communication means pod affinity
+
+apiVersion: v1
+kind: pod
+metadata:
+  name: pod-1
+  labels:
+    purpose: affinity
+spec:
+  container:  # equivalent to docker run -d --name nginx nginx
+  - name: nginx
+    image: nginx:stable-perl #nginx:stable-perl in case of version change
+
+-----------
+
+# pod to pod communication means pod affinity
+
+apiVersion: v1
+kind: pod
+metadata:
+  name: pod-2
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        labelSelector:
+        - matchExpressions:
+          - key: purpose
+            operator: In
+            values:
+            - affinity
+        topologykey: topology.kubernetes.io/zone
+  container:  # equivalent to docker run -d --name nginx nginx
+  - name: nginx
+    image: nginx:stable-perl #nginx:stable-perl in case of version change
+
+---------------
+
+apiVersion: v1
+kind: pod
+metadata:
+  name: pod-3
+spec:
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: purpose
+              operator: In
+              values:
+              - affinity
+          topologyKey: topology.kubernetes.io/zone
+  container:  # equivalent to docker run -d --name nginx nginx
+  - name: nginx
+    image: nginx:stable-perl #nginx:stable-perl in case of version change
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

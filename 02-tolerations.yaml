@@ -1,0 +1,19 @@
+# while tainted node even though chances of not reject any pod if we apply tolerations but not sure  accept that pod
+
+apiVersion: v1
+kind: pod
+metadata:
+  name: nginx
+spec:
+  container:  # equivalent to docker run -d --name nginx nginx
+  - name: nginx
+    image: nginx:stable-perl #nginx:stable-perl in case of version change
+
+  tolerations:
+  - key: "hardware"
+    operator: "Equal"
+    value: "gpu"
+    effect: "NoSchedule"
+
+
+

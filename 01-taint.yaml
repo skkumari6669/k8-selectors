@@ -1,0 +1,13 @@
+# tainted node rejected any pod
+
+apiVersion: v1
+kind: pod
+metadata:
+  name: nginx
+spec:
+  container:  # equivalent to docker run -d --name nginx nginx
+  - name: nginx
+    image: nginx:stable-perl #nginx:stable-perl in case of version change
+
+
+

@@ -1,0 +1,41 @@
+# while tainted node even though chances of not reject any pod if we apply tolerations but not sure  accept that pod
+
+apiVersion: v1
+kind: pod
+metadata:
+  name: nginx
+spec:
+  affinity:
+    nodeAffinity: 
+    # hard rule
+    # run this first (it will not schedule if mentioned key values pairs are wrong)
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: hardware
+            operator: In
+            values:
+            - gpu
+    # soft rule         
+    # run this 2nd (it will try to schedule if mentioned key values pairs are wrong also)
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1   #(1 to 100 we can mention multiple pods first preference starts from 1)
+        preference:
+          matchExpressions:
+          - key: another-node-label-key
+            operator: In
+            values:
+            - another-node-label-value      
+  container:  # equivalent to docker run -d --name nginx nginx
+  - name: nginx
+    image: nginx:stable-perl #nginx:stable-perl in case of version change
+  nodeSelector:
+    hardware: gpu
+  tolerations:
+  - key: "hardware"
+    operator: "Equal"
+    value: "gpu"
+    effect: "NoSchedule"
+
+
+
